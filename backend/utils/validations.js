@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
 const { check } = require('express-validator');
-const { Spot, Review } = require('../db/models');
+const { Spot } = require('../db/models');
 
 const handleValidationErrors = (req, _res, next) => {
     const validationErrors = validationResult(req);
@@ -18,25 +18,6 @@ const handleValidationErrors = (req, _res, next) => {
     }
     next();
 };
-
-const validateSpotValues = [
-    check('address').exists({ checkFalsy: true }).withMessage("Street address is required"),
-    check('city').exists({ checkFalsy: true }).withMessage("City is required"),
-    check('state').exists({ checkFalsy: true }).withMessage("State is required"),
-    check('country').exists({ checkFalsy: true }).withMessage("Country is required"),
-    check('lat').exists({ checkFalsy: true }).isFloat().withMessage("Latitude is not valid"),
-    check('lng').exists({ checkFalsy: true }).isFloat().withMessage("Longitude is not valid"),
-    check('name').exists({ checkFalsy: true }).isLength({ max: 50 }).withMessage("Name must be less than 50 characters"),
-    check('description').exists({ checkFalsy: true }).withMessage("Description is required"),
-    check('price').exists({ checkFalsy: true }).withMessage("Price per day is required"),
-    handleValidationErrors
-];
-
-const validateReviews = [
-    check('review').exists({ checkFalsy: true }).withMessage("Review Text is required"),
-    check('stars').isLength({ min: 1, max: 5 }).withMessage("Stars must be an integer from 1 to 5"),
-    handleValidationErrors
-];
 
 const properUserValidation = async (req, res, next) => {
     const { id } = req.user;
@@ -59,31 +40,6 @@ const properUserValidation = async (req, res, next) => {
         next();
     } catch (error) {
         next(error);
-    }
-};
-
-const properReviewValidation = async (req, res, next) => {
-    const { id } = req.user;
-    const { reviewId } = req.params;
-    try {
-        const review = await Review.findByPk(reviewId);
-
-        if (!review) {
-            return res.status(404).json({
-                message: "Review couldn't be found"
-            })
-        }
-
-        if (review.userId !== id) {
-            const err = new Error('Unauthorized');
-            err.status = 403;
-            err.title = 'Forbidden';
-            return next(err);
-        }
-
-        next();
-    } catch (error) {
-        next(error)
     }
 };
 
