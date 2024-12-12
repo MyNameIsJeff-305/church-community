@@ -5,20 +5,19 @@ const { Model, Validator } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      // define association here
+      User.belongsTo(models.Member, {
+        foreignKey: "userId",
+        onDelete: "SET NULL",
+      })
     }
   }
 
   User.init(
     {
-      memberId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        unique: true,
-      },
       profileImg: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        type: DataTypes.STRING(256),
+        allowNull: false,
+        defaultValue: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
       },
       email: {
         type: DataTypes.STRING,

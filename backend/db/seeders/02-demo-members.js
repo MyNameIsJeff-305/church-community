@@ -1,0 +1,38 @@
+'use strict';
+
+const { Member } = require('../models');
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
+
+module.exports = {
+  async up (queryInterface, Sequelize) {
+    await Member.bulkCreate([
+      {
+        userId: 1,
+        profileImg: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+        firstName: 'Demo',
+        lastName: 'Member',
+        alias: 'Demo',
+        idNumber: '1234567890',
+        birthDate: '1990-01-01',
+        genderId: 1,
+        householdId: null,
+        memberTypeId: 1,
+        memberStatusId: 1,
+        memberCivilStatusId: 1
+      },
+    ])
+  },
+
+  async down (queryInterface, Sequelize) {
+    /**
+     * Add commands to revert seed here.
+     *
+     * Example:
+     * await queryInterface.bulkDelete('People', null, {});
+     */
+  }
+};
