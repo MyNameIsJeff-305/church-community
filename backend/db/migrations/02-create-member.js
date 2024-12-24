@@ -50,7 +50,11 @@ module.exports = {
       },
       genderId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'Genders',
+          key: 'id'
+        },
       },
       householdId: {
         type: Sequelize.INTEGER,
@@ -59,15 +63,27 @@ module.exports = {
       },
       memberTypeId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'MemberTypes',
+          key: 'id',
+        },
       },
       memberStatusId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'MemberStatuses',
+          key: 'id',
+        },
       },
       memberCivilStatusId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'CivilStatuses',
+          key: 'id',
+        },
       },
       createdAt: {
         allowNull: false,

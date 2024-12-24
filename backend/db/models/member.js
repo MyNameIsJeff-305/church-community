@@ -8,6 +8,42 @@ module.exports = (sequelize, DataTypes) => {
       Member.hasOne(models.User, {
         foreignKey: "userId",
         onDelete: "SET NULL",
+      }),
+      Member.belongsTo(models.Gender, {
+        foreignKey: "genderId",
+        onDelete: "CASCADE",
+      }),
+      Member.belongsTo(models.MemberType, {
+        foreignKey: "memberTypeId",
+        onDelete: "CASCADE",
+      }),
+      Member.belongsTo(models.MemberStatus, {
+        foreignKey: "memberStatusId",
+        onDelete: "CASCADE",
+      }),
+      Member.belongsTo(models.CivilStatus, {
+        foreignKey: "memberCivilStatusId",
+        onDelete: "CASCADE",
+      }),
+      Member.hasMany(models.Email, {
+        foreignKey: "memberId",
+        onDelete: "CASCADE",
+      }),
+      Member.hasMany(models.Phone, {
+        foreignKey: "memberId",
+        onDelete: "CASCADE",
+      }),
+      Member.hasMany(models.Address, {
+        foreignKey: "memberId",
+        onDelete: "CASCADE",
+      }),
+      Member.hasOne(models.Household, {
+        foreignKey: "householdHeadId",
+        onDelete: "CASCADE",
+      }),
+      Member.belongsTo(models.Household, {
+        foreignKey: "id",
+        onDelete: "CASCADE",
       })
     }
   }
@@ -49,7 +85,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     genderId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'Genders',
+        key: 'id'
+      },
+      onDelete: "CASCADE"
     },
     householdId: {
       type: DataTypes.INTEGER,
@@ -58,15 +99,30 @@ module.exports = (sequelize, DataTypes) => {
     },
     memberTypeId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'MemberTypes',
+        key: 'id'
+      },
+      onDelete: "CASCADE"
     },
     memberStatusId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'MemberStatuses',
+        key: 'id'
+      },
+      onDelete: "CASCADE"
     },
     memberCivilStatusId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'CivilStatus',
+        key: 'id'
+      },
+      onDelete: "CASCADE"
     }
   }, {
     sequelize,

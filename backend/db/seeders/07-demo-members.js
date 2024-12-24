@@ -19,7 +19,7 @@ module.exports = {
         idNumber: '1234567890',
         birthDate: '1990-01-01',
         genderId: 1,
-        householdId: null,
+        householdId: 1,
         memberTypeId: 1,
         memberStatusId: 1,
         memberCivilStatusId: 1
@@ -28,11 +28,10 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+    options.tableName = 'Members';
+    const Op = Sequelize.Op;
+    return queryInterface.bulkDelete(options, {
+      idNumber: { [Op.in]: ['1234567890'] }
+    }, {});
   }
 };
