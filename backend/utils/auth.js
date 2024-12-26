@@ -70,4 +70,21 @@ const requireAuth = function (req, res, next) {
     });
 }
 
-module.exports = { setTokenCookie, restoreUser, requireAuth };
+//Middleware for checking the Role of the user
+const authorize = function (roles = []) {
+    if (typeof roles === 'string') {
+        roles = [roles];
+    }
+
+    return [
+        (req, res, next) => {
+            if (req.user && roles.some(role => req.user.roles.includes(role))) {
+                next();
+            } else {
+                res.status(403).json({ message: "Unauthorized" });
+            }
+        }
+    ];
+}
+
+module.exports = { setTokenCookie, restoreUser, requireAuth, authorize };

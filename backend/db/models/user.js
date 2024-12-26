@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsTo(models.Member, {
         foreignKey: "userId",
         onDelete: "SET NULL",
+      }),
+      User.belongsTo(models.UserRole, {
+        foreignKey: "user",
+        onDelete: "CASCADE",
       })
     }
   }
