@@ -20,7 +20,6 @@ router.get('/me', requireAuth, async (req, res, next) => {
 
 //Signup a User
 router.post('/', validateSignup, async (req, res, next) => {
-    // try block
     try {
         const userEmail = await User.findAll({
             where: {
@@ -53,17 +52,15 @@ router.post('/', validateSignup, async (req, res, next) => {
                 })
         }
 
-
-        // deconstruct req.body
         const defaultPassword = 'password'
         const { email, password, username, firstName, lastName } = req.body;
-        // // create a hashed password for user
+        
         let hashedPassword;
         if (password)
             hashedPassword = bcrypt.hashSync(password);
         else
             hashedPassword = bcrypt.hashSync(defaultPassword)
-        // // create user record in Users table
+        
         const newUser = await User.create({
             firstName: firstName,
             lastName: lastName,
@@ -72,7 +69,6 @@ router.post('/', validateSignup, async (req, res, next) => {
             hashedPassword: hashedPassword
         });
 
-        // create safeUser object for setTokenCookie function
         const safeUser = {
             id: newUser.id,
             firstName: newUser.firstName,
@@ -80,13 +76,13 @@ router.post('/', validateSignup, async (req, res, next) => {
             email: newUser.email,
             username: newUser.username
         };
-        // set token cookie
+        
         await setTokenCookie(res, safeUser);
 
         return res.json({
             user: safeUser
         });
-        // forward any errors not already sent
+        
     } catch (error) {
         next(error);
     };
