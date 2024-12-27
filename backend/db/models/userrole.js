@@ -5,24 +5,24 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class UserRole extends Model {
     static associate(models) {
-      UserRole.hasMany(models.User, {
-        foreignKey: "user",
-        onDelete: "CASCADE",
-      }),
-      UserRole.hasMany(models.Role, {
-        foreignKey: "role",
-        onDelete: "CASCADE",
-      })
     }
   }
   UserRole.init({
-    user: {
+    userId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      type: DataTypes.INTEGER
+      references: {
+        model: 'User', // Ensure this matches the defined model name if using Sequelize auto table creation
+        key: 'id'
+      }
     },
-    role: {
+    roleId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      type: DataTypes.INTEGER
+      references: {
+        model: 'Role', // Ensure this matches the defined model name
+        key: 'id'
+      }
     }
   }, {
     sequelize,

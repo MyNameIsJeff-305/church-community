@@ -5,18 +5,18 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Role extends Model {
     static associate(models) {
-      Role.belongsTo(models.UserRole, {
-        foreignKey: "role",
-        onDelete: "CASCADE",
-      })
+      Role.belongsToMany(models.User, {
+        through: 'UserRole',
+        as: 'users',
+        foreignKey: 'roleId',
+        otherKey: 'userId'
+      });
     }
   }
   Role.init({
     name: {
-      type: {
-        allowNull: false,
-        type: DataTypes.STRING
-      }
+      allowNull: false,
+      type: DataTypes.STRING
     }
   }, {
     sequelize,

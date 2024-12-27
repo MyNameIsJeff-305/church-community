@@ -15,11 +15,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user: {
+      userId: {
         allowNull: false,
         type: Sequelize.INTEGER
       },
-      role: {
+      roleId: {
         allowNull: false,
         type: Sequelize.INTEGER
       },

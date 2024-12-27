@@ -5,14 +5,12 @@ const { Model, Validator } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      User.belongsTo(models.Member, {
-        foreignKey: "userId",
-        onDelete: "SET NULL",
-      }),
-      User.belongsTo(models.UserRole, {
-        foreignKey: "user",
-        onDelete: "CASCADE",
-      })
+      User.belongsToMany(models.Role, {
+        through: 'UserRole',
+        as: 'roles',
+        foreignKey: 'userId',
+        otherKey: 'roleId'
+      });
     }
   }
 

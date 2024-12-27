@@ -12,16 +12,16 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await UserRole.bulkCreate([
       {
-        user: 1,
-        role: 1
+        userId: 1,
+        roleId: 1
       },
       {
-        user: 2,
-        role: 2
+        userId: 2,
+        roleId: 2
       },
       {
-        user: 3,
-        role: 3
+        userId: 3,
+        roleId: 3
       }
     ])
   },
@@ -30,7 +30,7 @@ module.exports = {
     options.tableName = 'UserRoles';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      user: { [Op.in]: ['1', '2', '3'] }
+      userId: { [Op.in]: ['1', '2', '3'] }
     }, {});
   }
 };

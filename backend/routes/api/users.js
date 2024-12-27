@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { requireAuth } = require('../../utils/auth.js');
-const { User, Spot, Review, SpotImage, ReviewImage, Booking } = require('../../db/models');
+const { User } = require('../../db/models');
 const { validateSignup, validateUser } = require('../../utils/validations')
 const { Sequelize, where } = require('sequelize');
 
@@ -54,13 +54,13 @@ router.post('/', validateSignup, async (req, res, next) => {
 
         const defaultPassword = 'password'
         const { email, password, username, firstName, lastName } = req.body;
-        
+
         let hashedPassword;
         if (password)
             hashedPassword = bcrypt.hashSync(password);
         else
             hashedPassword = bcrypt.hashSync(defaultPassword)
-        
+
         const newUser = await User.create({
             firstName: firstName,
             lastName: lastName,
@@ -76,13 +76,13 @@ router.post('/', validateSignup, async (req, res, next) => {
             email: newUser.email,
             username: newUser.username
         };
-        
+
         await setTokenCookie(res, safeUser);
 
         return res.json({
             user: safeUser
         });
-        
+
     } catch (error) {
         next(error);
     };

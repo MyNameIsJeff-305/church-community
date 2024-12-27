@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const usersRouter = require('./users.js');
 const sessionRouter = require('./session.js');
+const memberRouter = require('./members.js');
 const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth.js');
 const { validateSignup, handleValidationErrors } = require('../../utils/validations');
 const bcrypt = require('bcryptjs');
@@ -10,6 +11,7 @@ const { User } = require('../../db/models');
 router.use(restoreUser);
 
 router.use('/session', sessionRouter);
+router.use('/members', memberRouter);
 router.use('/users', usersRouter);
 
 

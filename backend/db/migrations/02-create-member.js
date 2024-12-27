@@ -14,15 +14,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      userId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        unique: true,
-        references: {
-          model: 'Users',
-          key: 'id',
-        },
-      },
       profileImg: {
         type: Sequelize.STRING(256),
         allowNull: true,

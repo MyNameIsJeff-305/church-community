@@ -5,10 +5,6 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Member extends Model {
     static associate(models) {
-      Member.hasOne(models.User, {
-        foreignKey: "userId",
-        onDelete: "SET NULL",
-      }),
       Member.belongsTo(models.Gender, {
         foreignKey: "genderId",
         onDelete: "CASCADE",
@@ -48,16 +44,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Member.init({
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      unique: true,
-      references: {
-        model: 'Users',
-        key: 'id',
-      },
-      onDelete: "SET NULL",
-    },
     profileImg: {
       type: DataTypes.STRING,
       allowNull: true,
