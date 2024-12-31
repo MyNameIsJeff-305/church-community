@@ -21,7 +21,8 @@ module.exports = {
         references: {
           model: 'Phones',
           key: 'id'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       phoneType: {
         allowNull: false,

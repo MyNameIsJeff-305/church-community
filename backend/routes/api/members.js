@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { requireAuth, authorize } = require('../../utils/auth.js');
 
-const { Member, Gender, MemberType, CivilStatus, Household } = require('../../db/models');
+const { Member, Gender, MemberType, CivilStatus, Household, Phone, PhoneType } = require('../../db/models');
 
 //Get all Members
 router.get('/', requireAuth, async (req, res, next) => {
@@ -75,7 +75,7 @@ router.get('/:id', requireAuth, async (req, res, next) => {
 })
 
 //Create a Member
-router.post('/', requireAuth, async(req, res, next) => { //Implement Role and Permissions
+router.post('/', requireAuth, async (req, res, next) => { //Implement Role and Permissions
     try {
         const { profileImg, firstName, lastName, alias, idNumber, birthDate, genderId, householdId, memberTypeId, memberStatusId, memberCivilStatusId } = req.body;
 
@@ -95,12 +95,12 @@ router.post('/', requireAuth, async(req, res, next) => { //Implement Role and Pe
 
         return res.status(201).json(member);
     } catch (error) {
-        
+        next(error);
     }
 })
 
 //Update a Member
-router.put('/:id', requireAuth, async(req, res, next) => {
+router.put('/:id', requireAuth, async (req, res, next) => {
     try {
         const member = await Member.findByPk(req.params.id);
 
@@ -132,7 +132,7 @@ router.put('/:id', requireAuth, async(req, res, next) => {
 });
 
 //Delete a Member
-router.delete('/:id', requireAuth, async(req, res, next) => {
+router.delete('/:id', requireAuth, async (req, res, next) => {
     try {
         const member = await Member.findByPk(req.params.id);
 
@@ -143,6 +143,133 @@ router.delete('/:id', requireAuth, async(req, res, next) => {
         await member.destroy();
 
         return res.json({ message: 'Member deleted' });
+
+    } catch (error) {
+        next(error);
+    }
+});
+
+//Get all Phones of a Member
+router.get('/:id/phones', requireAuth, async (req, res, next) => {
+    const memberId = parseInt(req.params.id);
+
+    try {
+        const phones = await Phone.findAll({
+            where: {
+                memberId: memberId
+            }
+        })
+
+        if (phones.length === 0) {
+            return res.status(404).json({ message: 'This user does not have phones' });
+        }
+
+        let Phones = [];
+
+        for (let phone of phones) {
+            const phoneType = await PhoneType.findAll({
+                where: {
+                    phoneId: phone.id
+                },
+            });
+
+            Phones.push({
+                id: phone.id,
+                phone: phone.phoneNumber,
+                phoneType: phoneType[0].phoneType
+            })
+        }
+
+
+        res.json(Phones);
+
+    } catch (error) {
+        next(error);
+    }
+})
+
+//Add a Phone to a Member
+router.post('/:id/phones', requireAuth, async (req, res, next) => {
+    const memberId = parseInt(req.params.id);
+
+    try {
+        const { phoneNumber, phoneType } = req.body;
+        
+        const phone = await Phone.create({
+            phoneNumber,
+            memberId
+        });
+
+        await PhoneType.create({
+            phoneId: phone.id,
+            phoneType: phoneType
+        });
+
+        return res.status(201).json({
+            id: phone.id,
+            phone: phone.phoneNumber,
+            phoneType: phoneType
+        });
+
+    } catch (error) {
+        next(error);
+    }
+});
+
+//Update a Phone of a Member
+router.put('/:id/phones/:phoneId', requireAuth, async (req, res, next) => {
+    const memberId = parseInt(req.params.id);
+    const phoneId = parseInt(req.params.phoneId);
+
+    try {
+        const phone = await Phone.findByPk(phoneId);
+
+        if (!phone) {
+            return res.status(404).json({ message: 'Phone not found' });
+        }
+
+        const { phoneNumber, phoneType } = req.body;
+
+        phone.phoneNumber = phoneNumber || phone.phoneNumber;
+
+        await phone.save();
+
+        const phoneTypeObj = await PhoneType.findOne({
+            where: {
+                phoneId: phone.id
+            }
+        });
+
+        phoneTypeObj.phoneType = phoneType || phoneTypeObj.phoneType;
+
+        await phoneTypeObj.save();
+
+        return res.json({
+            id: phone.id,
+            phone: phone.phoneNumber,
+            phoneType: phoneTypeObj.phoneType
+        });
+
+    } catch (error) {
+        next(error);
+    }
+});
+
+//Delete a Phone of a Member
+router.delete('/:id/phones/:phoneId', requireAuth, async (req, res, next) => {
+    const memberId = parseInt(req.params.id);
+    const phoneId = parseInt(req.params.phoneId);
+
+    try {
+        const phone = await Phone.findByPk(phoneId);
+
+        if (!phone) {
+            return res.status(404).json({ message: 'Phone not found' });
+        }
+
+        await phone.destroy();
+
+        return res.json({ message: 'Phone deleted' });
 
     } catch (error) {
         next(error);

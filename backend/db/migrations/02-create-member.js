@@ -46,6 +46,7 @@ module.exports = {
           model: 'Genders',
           key: 'id'
         },
+        onDelete: "CASCADE"
       },
       householdId: {
         type: Sequelize.INTEGER,
@@ -59,6 +60,7 @@ module.exports = {
           model: 'MemberTypes',
           key: 'id',
         },
+        onDelete: "CASCADE"
       },
       memberStatusId: {
         type: Sequelize.INTEGER,
@@ -67,6 +69,7 @@ module.exports = {
           model: 'MemberStatuses',
           key: 'id',
         },
+        onDelete: "CASCADE"
       },
       memberCivilStatusId: {
         type: Sequelize.INTEGER,
@@ -75,6 +78,7 @@ module.exports = {
           model: 'CivilStatuses',
           key: 'id',
         },
+        onDelete: "CASCADE"
       },
       createdAt: {
         allowNull: false,

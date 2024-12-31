@@ -22,6 +22,7 @@ module.exports = {
           model: 'Members',
           key: 'id'
         },
+        onDelete: "CASCADE"
       },
       emailAddress: {
         allowNull: false,
@@ -33,7 +34,8 @@ module.exports = {
         references: {
           model: 'EmailTypes',
           key: 'id'
-        }
+        },
+        onDelete: "CASCADE"
       },
       createdAt: {
         allowNull: false,
