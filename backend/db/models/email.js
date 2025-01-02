@@ -8,10 +8,6 @@ module.exports = (sequelize, DataTypes) => {
       Email.belongsTo(models.Member, {
         foreignKey: "memberId",
         onDelete: "CASCADE"
-      }),
-      Email.hasMany(models.EmailTypes, {
-        foreignKey: "emailTypeId",
-        onDelete: "CASCADE"
       })
     }
   }
@@ -29,14 +25,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING(50)
     },
-    emailTypeId: {
+    emailType: {
       allowNull: false,
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'EmailTypes',
-        key: 'id'
-      },
-      onDelete: 'CASCADE'
+      type: DataTypes.ENUM('Personal', 'Work', 'Other')
     }
   }, {
     sequelize,

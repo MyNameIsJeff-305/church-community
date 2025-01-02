@@ -24,6 +24,10 @@ module.exports = {
         },
         onDelete: "CASCADE"
       },
+      addressType: {
+        allowNull: false,
+        type: Sequelize.ENUM('Home', 'Work', 'Other')
+      },
       line1: {
         allowNull: false,
         type: Sequelize.STRING

@@ -17,14 +17,16 @@ module.exports = {
         line2: 'Apt 3',
         city: 'Demo City',
         stateProvince: 'Demo Province',
-        zipPostalCode: '1234'
+        zipPostalCode: '1234',
+        type: 'Home'
       },
       {
         memberId: 1,
         line1: '1235 Demo St.',
         city: 'Demo City',
         stateProvince: 'Demo Province',
-        zipPostalCode: '1234'
+        zipPostalCode: '1234',
+        type: "Work"
       },
       {
         memberId: 1,
@@ -32,7 +34,8 @@ module.exports = {
         line2: 'Apt 3',
         city: 'Demo City',
         stateProvince: 'Demo Province',
-        zipPostalCode: '1234'
+        zipPostalCode: '1234',
+        type: "Other"
       },
       {
         memberId: 1,
@@ -40,7 +43,8 @@ module.exports = {
         line2: 'Apt 3',
         city: 'Demo City',
         stateProvince: 'Demo Province',
-        zipPostalCode: '1234'
+        zipPostalCode: '1234',
+        type: "Home"
       }
     ])
   },

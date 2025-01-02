@@ -13,19 +13,23 @@ module.exports = {
     await Phone.bulkCreate([
       {
         memberId: 1,
-        phoneNumber: '09123456789'
+        phoneNumber: '09123456789',
+        phoneType: 'Home'
       },
       {
         memberId: 1,
-        phoneNumber: '09123456788'
+        phoneNumber: '09123456788',
+        phoneType: 'Work'
       },
       {
         memberId: 1,
-        phoneNumber: '09123456787'
+        phoneNumber: '09123456787',
+        phoneType: 'Mobile'
       },
       {
         memberId: 1,
-        phoneNumber: '09123456786'
+        phoneNumber: '09123456786',
+        phoneType: 'Other'
       }
     ])
   },
@@ -34,7 +38,7 @@ module.exports = {
     options.tableName = 'Phones';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      phoneNumber: { [Op.in]: ['09123456789'] }
+      phoneNumber: { [Op.in]: ['09123456789', '09123456788', '09123456787', '09123456786'] }
     }, {});
   }
 };

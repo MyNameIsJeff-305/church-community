@@ -23,6 +23,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      phoneType: {
+        allowNull: false,
+        type: Sequelize.ENUM('Home', 'Work', 'Mobile', 'Other')
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

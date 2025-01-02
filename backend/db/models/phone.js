@@ -8,10 +8,6 @@ module.exports = (sequelize, DataTypes) => {
       Phone.belongsTo(models.Member, {
         foreignKey: "memberId",
         onDelete: "CASCADE"
-      }),
-      Phone.hasMany(models.PhoneType, {
-        foreignKey: "phoneId",
-        onDelete: "CASCADE"
       })
     }
   }
@@ -28,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
     phoneNumber: {
       allowNull: false,
       type: DataTypes.STRING
+    },
+    phoneType: {
+      allowNull: false,
+      type: DataTypes.ENUM('Home', 'Work', 'Mobile', 'Other')
     }
   }, {
     sequelize,

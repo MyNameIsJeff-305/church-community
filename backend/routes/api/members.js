@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { requireAuth, authorize } = require('../../utils/auth.js');
 
-const { Member, Gender, MemberType, CivilStatus, Household, Phone, PhoneType } = require('../../db/models');
+const { Member, Gender, MemberType, CivilStatus, Household, Phone, PhoneType, Email, EmailTypes } = require('../../db/models');
 
 //Get all Members
 router.get('/', requireAuth, async (req, res, next) => {
@@ -158,28 +158,22 @@ router.get('/:id/phones', requireAuth, async (req, res, next) => {
             where: {
                 memberId: memberId
             }
-        })
+        });
 
         if (phones.length === 0) {
-            return res.status(404).json({ message: 'This user does not have phones' });
+            return res.status(404).json({ message: 'No phones found' });
         }
 
         let Phones = [];
 
         for (let phone of phones) {
-            const phoneType = await PhoneType.findAll({
-                where: {
-                    phoneId: phone.id
-                },
-            });
 
             Phones.push({
                 id: phone.id,
-                phone: phone.phoneNumber,
-                phoneType: phoneType[0].phoneType
+                phoneNumber: phone.phoneNumber,
+                phoneType: phone.phoneType
             })
         }
-
 
         res.json(Phones);
 
@@ -194,35 +188,26 @@ router.post('/:id/phones', requireAuth, async (req, res, next) => {
 
     try {
         const { phoneNumber, phoneType } = req.body;
-        
+
         const phone = await Phone.create({
             phoneNumber,
+            phoneType,
             memberId
         });
 
-        await PhoneType.create({
-            phoneId: phone.id,
-            phoneType: phoneType
-        });
-
-        return res.status(201).json({
-            id: phone.id,
-            phone: phone.phoneNumber,
-            phoneType: phoneType
-        });
+        return res.status(201).json(phone);
 
     } catch (error) {
-        next(error);
+        next(error)
     }
 });
 
 //Update a Phone of a Member
 router.put('/:id/phones/:phoneId', requireAuth, async (req, res, next) => {
     const memberId = parseInt(req.params.id);
-    const phoneId = parseInt(req.params.phoneId);
 
     try {
-        const phone = await Phone.findByPk(phoneId);
+        const phone = await Phone.findByPk(req.params.phoneId);
 
         if (!phone) {
             return res.status(404).json({ message: 'Phone not found' });
@@ -231,24 +216,11 @@ router.put('/:id/phones/:phoneId', requireAuth, async (req, res, next) => {
         const { phoneNumber, phoneType } = req.body;
 
         phone.phoneNumber = phoneNumber || phone.phoneNumber;
+        phone.phoneType = phoneType || phone.phoneType;
 
         await phone.save();
 
-        const phoneTypeObj = await PhoneType.findOne({
-            where: {
-                phoneId: phone.id
-            }
-        });
-
-        phoneTypeObj.phoneType = phoneType || phoneTypeObj.phoneType;
-
-        await phoneTypeObj.save();
-
-        return res.json({
-            id: phone.id,
-            phone: phone.phoneNumber,
-            phoneType: phoneTypeObj.phoneType
-        });
+        return res.json(phone);
 
     } catch (error) {
         next(error);
@@ -258,10 +230,9 @@ router.put('/:id/phones/:phoneId', requireAuth, async (req, res, next) => {
 //Delete a Phone of a Member
 router.delete('/:id/phones/:phoneId', requireAuth, async (req, res, next) => {
     const memberId = parseInt(req.params.id);
-    const phoneId = parseInt(req.params.phoneId);
 
     try {
-        const phone = await Phone.findByPk(phoneId);
+        const phone = await Phone.findByPk(req.params.phoneId);
 
         if (!phone) {
             return res.status(404).json({ message: 'Phone not found' });
@@ -276,5 +247,101 @@ router.delete('/:id/phones/:phoneId', requireAuth, async (req, res, next) => {
     }
 });
 
+//Get all Emails of a Member
+router.get('/:id/emails', requireAuth, async (req, res, next) => {
+    const memberId = parseInt(req.params.id);
+
+    try {
+        const emails = await Email.findAll({
+            where: {
+                memberId: memberId
+            }
+        });
+
+        if(emails.length === 0) {
+            return res.status(404).json({ message: 'No emails found' });
+        }
+
+        let Emails = [];
+
+        for (let email of emails) {
+            Emails.push({
+                id: email.id,
+                emailAddress: email.emailAddress,
+                emailType: email.emailType
+            })
+        }
+
+        res.json(Emails);
+
+    } catch (error) {
+        next(error);
+    }
+});
+
+//Add an Email to a Member
+router.post('/:id/emails', requireAuth, async (req, res, next) => {
+    const memberId = parseInt(req.params.id);
+
+    try {
+        const { emailAddress, emailType } = req.body;
+
+        const email = await Email.create({
+            emailAddress,
+            emailType,
+            memberId
+        });
+
+        return res.status(201).json(email);
+
+    } catch (error) {
+        next(error);
+    }
+});
+
+//Update an Email of a Member
+router.put('/:id/emails/:emailId', requireAuth, async (req, res, next) => {
+    const memberId = parseInt(req.params.id);
+
+    try {
+        const email = await Email.findByPk(req.params.emailId);
+
+        if (!email) {
+            return res.status(404).json({ message: 'Email not found' });
+        }
+
+        const { emailAddress, emailType } = req.body;
+
+        email.emailAddress = emailAddress || email.emailAddress;
+        email.emailType = emailType || email.emailType;
+
+        await email.save();
+
+        return res.json(email);
+
+    } catch (error) {
+        next(error);
+    }
+});
+
+//Delete an Email of a Member
+router.delete('/:id/emails/:emailId', requireAuth, async (req, res, next) => {
+    const memberId = parseInt(req.params.id);
+
+    try {
+        const email = await Email.findByPk(req.params.emailId);
+
+        if (!email) {
+            return res.status(404).json({ message: 'Email not found' });
+        }
+
+        await email.destroy();
+
+        return res.json({ message: 'Email deleted' });
+
+    } catch (error) {
+        next(error);
+    }
+});
 
 module.exports = router;

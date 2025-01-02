@@ -28,14 +28,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING(50)
       },
-      emailTypeId: {
+      emailType: {
         allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'EmailTypes',
-          key: 'id'
-        },
-        onDelete: "CASCADE"
+        type: Sequelize.ENUM('Personal', 'Work', 'Other')
       },
       createdAt: {
         allowNull: false,

@@ -13,7 +13,17 @@ module.exports = {
       {
         memberId: 1,
         emailAddress: 'demo@app.io',
-        emailTypeId: 1
+        emailType: 'Work'
+      },
+      {
+        memberId: 1,
+        emailAddress: 'demogmail@gmail.com',
+        emailType: 'Personal'
+      },
+      {
+        memberId: 1,
+        emailAddress: 'other@demo.io',
+        emailType: 'Other'
       }
     ])
   },
