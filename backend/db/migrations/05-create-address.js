@@ -8,23 +8,46 @@ if (process.env.NODE_ENV === 'production') {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('PhoneTypes', {
+    await queryInterface.createTable('Addresses', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      phoneId: {
+      memberId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'Phones',
+          model: 'Members',
           key: 'id'
         },
-        onDelete: 'CASCADE'
+        onDelete: "CASCADE"
       },
-      phoneType: {
+      addressType: {
+        allowNull: false,
+        type: Sequelize.ENUM('Home', 'Work', 'Other')
+      },
+      line1: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      line2: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      city: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      stateProvince: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      zipPostalCode: {
+        type: Sequelize.STRING
+      },
+      country: {
         allowNull: false,
         type: Sequelize.STRING
       },
@@ -39,7 +62,7 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    options.tableName = "PhoneTypes";
+    options.tableName = "Addresses";
     await queryInterface.dropTable(options);
   }
 };

@@ -8,10 +8,6 @@ module.exports = (sequelize, DataTypes) => {
       Address.belongsTo(models.Member, {
         foreignKey: "memberId",
         onDelete: "CASCADE"
-      }),
-      Address.hasMany(models.AddressType, {
-        foreignKey: "addressId",
-        onDelete: "CASCADE"
       })
     }
   }
@@ -24,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
         key: "id"
       },
       onDelete: "CASCADE"
+    },
+    addressType: {
+      allowNull: false,
+      type: DataTypes.ENUM('Home', 'Work', 'Other')
     },
     line1: {
       allowNull: false,
@@ -45,6 +45,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     zipPostalCode: {
+      type: DataTypes.STRING
+    },
+    country: {
+      allowNull: false,
       type: DataTypes.STRING
     }
   }, {

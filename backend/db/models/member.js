@@ -5,22 +5,6 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Member extends Model {
     static associate(models) {
-      Member.belongsTo(models.Gender, {
-        foreignKey: "genderId",
-        onDelete: "CASCADE",
-      }),
-      Member.belongsTo(models.MemberType, {
-        foreignKey: "memberTypeId",
-        onDelete: "CASCADE",
-      }),
-      Member.belongsTo(models.MemberStatus, {
-        foreignKey: "memberStatusId",
-        onDelete: "CASCADE",
-      }),
-      Member.belongsTo(models.CivilStatus, {
-        foreignKey: "memberCivilStatusId",
-        onDelete: "CASCADE",
-      }),
       Member.hasMany(models.Email, {
         foreignKey: "memberId",
         onDelete: "CASCADE",
@@ -69,46 +53,26 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false
     },
-    genderId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Genders',
-        key: 'id'
-      },
-      onDelete: "CASCADE"
+    gender: {
+      type: DataTypes.ENUM('Male', 'Female'),
+      allowNull: false
     },
     householdId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: null
     },
-    memberTypeId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'MemberTypes',
-        key: 'id'
-      },
-      onDelete: "CASCADE"
+    memberType: {
+      type: DataTypes.ENUM('Member', 'Leader', 'Pastor', 'Deacon'),
+      allowNull: false
     },
-    memberStatusId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'MemberStatuses',
-        key: 'id'
-      },
-      onDelete: "CASCADE"
+    memberStatus: {
+      type: DataTypes.ENUM('Active', 'Inactive', 'Deceased', 'Moved'),
+      allowNull: false
     },
-    memberCivilStatusId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'CivilStatus',
-        key: 'id'
-      },
-      onDelete: "CASCADE"
+    memberCivilStatus: {
+      type: DataTypes.ENUM('Single', 'Married', 'Widowed', 'Divorced'),
+      allowNull: false
     }
   }, {
     sequelize,

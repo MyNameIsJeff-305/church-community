@@ -17,11 +17,11 @@ module.exports = {
         alias: 'Demo',
         idNumber: '1234567890',
         birthDate: '1990-01-01',
-        genderId: 1,
+        gender: 'Male',
         householdId: 1,
-        memberTypeId: 1,
-        memberStatusId: 1,
-        memberCivilStatusId: 1
+        memberType: 'Member',
+        memberStatus: 'Active',
+        memberCivilStatus: 'Single'
       },
     ])
   },

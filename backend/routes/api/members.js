@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { requireAuth, authorize } = require('../../utils/auth.js');
 
-const { Member, Gender, MemberType, CivilStatus, Household, Phone, PhoneType, Email, EmailTypes } = require('../../db/models');
+const { Member, Household, Phone, Email, Address } = require('../../db/models');
 
 //Get all Members
 router.get('/', requireAuth, async (req, res, next) => {
@@ -9,29 +9,11 @@ router.get('/', requireAuth, async (req, res, next) => {
     try {
         const members = await Member.findAll();
 
-        let Members = [];
-
-        for (let member of members) {
-            const gender = await Gender.findByPk(member.genderId);
-            const memberType = await MemberType.findByPk(member.memberTypeId);
-            const civilStatus = await CivilStatus.findByPk(member.memberCivilStatusId);
-
-            Members.push({
-                id: member.id,
-                userId: member.userId,
-                profileImg: member.profileImg,
-                firstName: member.firstName,
-                lastName: member.lastName,
-                alias: member.alias,
-                idNumber: member.idNumber,
-                birthDate: member.birthDate,
-                gender: gender.gender,
-                memberType: memberType.memberType,
-                civilStatus: civilStatus.civilStatus
-            })
+        if(members.length === 0) {
+            return res.status(404).json({ message: 'No members found' });
         }
 
-        res.json(Members);
+        res.json(members);
     }
     catch (error) {
         next(error);
@@ -47,27 +29,7 @@ router.get('/:id', requireAuth, async (req, res, next) => {
             return res.status(404).json({ message: 'Member not found' });
         }
 
-        const gender = await Gender.findByPk(member.genderId);
-        const memberType = await MemberType.findByPk(member.memberTypeId);
-        const civilStatus = await CivilStatus.findByPk(member.memberCivilStatusId);
-        const household = await Household.findByPk(member.householdId) || null;
-
-        let safeMember = {
-            id: member.id,
-            userId: member.userId,
-            profileImg: member.profileImg,
-            firstName: member.firstName,
-            lastName: member.lastName,
-            alias: member.alias,
-            idNumber: member.idNumber,
-            birthDate: member.birthDate,
-            gender: gender.gender,
-            memberType: memberType.memberType,
-            civilStatus: civilStatus.civilStatus,
-            household: household ? household.name : null
-        }
-
-        return res.json(safeMember);
+        return res.json(member);
 
     } catch (error) {
 
@@ -77,7 +39,7 @@ router.get('/:id', requireAuth, async (req, res, next) => {
 //Create a Member
 router.post('/', requireAuth, async (req, res, next) => { //Implement Role and Permissions
     try {
-        const { profileImg, firstName, lastName, alias, idNumber, birthDate, genderId, householdId, memberTypeId, memberStatusId, memberCivilStatusId } = req.body;
+        const { profileImg, firstName, lastName, alias, idNumber, birthDate, gender, householdId, memberType, memberStatus, memberCivilStatus } = req.body;
 
         const member = await Member.create({
             profileImg: profileImg || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
@@ -86,11 +48,11 @@ router.post('/', requireAuth, async (req, res, next) => { //Implement Role and P
             alias,
             idNumber,
             birthDate,
-            genderId,
+            gender,
             householdId: householdId || null,
-            memberTypeId,
-            memberStatusId,
-            memberCivilStatusId
+            memberType,
+            memberStatus,
+            memberCivilStatus
         });
 
         return res.status(201).json(member);
@@ -108,7 +70,7 @@ router.put('/:id', requireAuth, async (req, res, next) => {
             return res.status(404).json({ message: 'Member not found' });
         }
 
-        const { profileImg, firstName, lastName, alias, idNumber, birthDate, genderId, householdId, memberTypeId, memberStatusId, memberCivilStatusId } = req.body;
+        const { profileImg, firstName, lastName, alias, idNumber, birthDate, gender, householdId, memberType, memberStatus, memberCivilStatus } = req.body;
 
         member.profileImg = profileImg || member.profileImg;
         member.firstName = firstName || member.firstName;
@@ -116,11 +78,11 @@ router.put('/:id', requireAuth, async (req, res, next) => {
         member.alias = alias || member.alias;
         member.idNumber = idNumber || member.idNumber;
         member.birthDate = birthDate || member.birthDate;
-        member.genderId = genderId || member.genderId;
-        member.householdId = householdId || member.householdId;
-        member.memberTypeId = memberTypeId || member.memberTypeId;
-        member.memberStatusId = memberStatusId || member.memberStatusId;
-        member.memberCivilStatusId = memberCivilStatusId || member.memberCivilStatusId;
+        member.gender = gender || member.gender;
+        member.household = household || member.household;
+        member.memberType = memberType || member.memberType;
+        member.memberStatus = memberStatus || member.memberStatus;
+        member.memberCivilStatus = memberCivilStatus || member.memberCivilStatus;
 
         await member.save();
 
@@ -258,7 +220,7 @@ router.get('/:id/emails', requireAuth, async (req, res, next) => {
             }
         });
 
-        if(emails.length === 0) {
+        if (emails.length === 0) {
             return res.status(404).json({ message: 'No emails found' });
         }
 
@@ -338,6 +300,44 @@ router.delete('/:id/emails/:emailId', requireAuth, async (req, res, next) => {
         await email.destroy();
 
         return res.json({ message: 'Email deleted' });
+
+    } catch (error) {
+        next(error);
+    }
+});
+
+//Get all Addresses of a Member
+router.get('/:id/addresses', requireAuth, async (req, res, next) => {
+    const memberId = parseInt(req.params.id);
+
+    try {
+        const addresses = await Address.findAll({
+            where: {
+                memberId: memberId
+            }
+        });
+
+        if (addresses.length === 0) {
+            return res.status(404).json({ message: 'No addresses found' });
+        }
+
+        let Addresses = [];
+
+        for (let address of addresses) {
+            Addresses.push({
+                id: address.id,
+                line1: address.line1,
+                line2: address.line2,
+                city: address.city,
+                stateProvince: address.stateProvince,
+                zipPostalCode: address.zipPostalCode,
+                addressType: address.addressType,
+                country: address.country,
+                type: address.type
+            })
+        }
+
+        res.json(Addresses);
 
     } catch (error) {
         next(error);

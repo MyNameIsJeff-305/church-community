@@ -39,46 +39,26 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false
       },
-      genderId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Genders',
-          key: 'id'
-        },
-        onDelete: "CASCADE"
+      gender: {
+        type: Sequelize.ENUM('Male', 'Female'),
+        allowNull: false
       },
       householdId: {
         type: Sequelize.INTEGER,
         allowNull: true,
         defaultValue: null
       },
-      memberTypeId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'MemberTypes',
-          key: 'id',
-        },
-        onDelete: "CASCADE"
+      memberType: {
+        type: Sequelize.ENUM('Member', 'Leader', 'Pastor', 'Deacon'),
+        allowNull: false
       },
-      memberStatusId: {
-        type: Sequelize.INTEGER,
+      memberStatus: {
+        type: Sequelize.ENUM('Active', 'Inactive', 'Deceased', 'Moved'),
         allowNull: false,
-        references: {
-          model: 'MemberStatuses',
-          key: 'id',
-        },
-        onDelete: "CASCADE"
       },
-      memberCivilStatusId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'CivilStatuses',
-          key: 'id',
-        },
-        onDelete: "CASCADE"
+      memberCivilStatus: {
+        type: Sequelize.ENUM('Single', 'Married', 'Widowed', 'Divorced'),
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

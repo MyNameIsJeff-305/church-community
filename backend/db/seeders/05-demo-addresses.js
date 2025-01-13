@@ -18,7 +18,8 @@ module.exports = {
         city: 'Demo City',
         stateProvince: 'Demo Province',
         zipPostalCode: '1234',
-        type: 'Home'
+        addressType: 'Home',
+        country: 'Demo Country'
       },
       {
         memberId: 1,
@@ -26,7 +27,8 @@ module.exports = {
         city: 'Demo City',
         stateProvince: 'Demo Province',
         zipPostalCode: '1234',
-        type: "Work"
+        addressType: "Work",
+        country: 'Demo Country'
       },
       {
         memberId: 1,
@@ -35,7 +37,8 @@ module.exports = {
         city: 'Demo City',
         stateProvince: 'Demo Province',
         zipPostalCode: '1234',
-        type: "Other"
+        addressType: "Other",
+        country: 'Demo Country'
       },
       {
         memberId: 1,
@@ -44,7 +47,8 @@ module.exports = {
         city: 'Demo City',
         stateProvince: 'Demo Province',
         zipPostalCode: '1234',
-        type: "Home"
+        addressType: "Home",
+        country: 'Demo Country'
       }
     ])
   },
