@@ -1,17 +1,18 @@
 const router = require('express').Router();
-const usersRouter = require('./users.js');
-const sessionRouter = require('./session.js');
 const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth.js');
-const { validateSignup, handleValidationErrors } = require('../../utils/validations');
+const { handleValidationErrors } = require('../../utils/validations');
 const bcrypt = require('bcryptjs');
 const { User } = require('../../db/models');
 
+const usersRouter = require('./users.js');
+const sessionRouter = require('./session.js');
+const membersRouter = require('./members.js');
 
 router.use(restoreUser);
 
 router.use('/session', sessionRouter);
 router.use('/users', usersRouter);
-
+router.use('/members', membersRouter);
 
 router.get('/api/csrf/restore', (_req, _res) => {
     if (process.env.NODE_ENV !== 'production') {
@@ -32,7 +33,7 @@ router.get('/require-auth', requireAuth, (req, res) => {
     }
 });
 
-router.post('/signup', validateSignup, async (req, res, next) => {
+router.post('/signup', async (req, res, next) => {
     // try block
     try {
         // deconstruct req.body

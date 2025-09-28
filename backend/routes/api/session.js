@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 
 const { setTokenCookie } = require('../../utils/auth');
 
-const { validateLogin } = require('../../utils/validations');
+// const { validateLogin } = require('../../utils/validations');
 
 //Get the current User
 router.get('/', async (req, res, next) => {
@@ -33,7 +33,7 @@ router.get('/', async (req, res, next) => {
 });
 
 //Log in
-router.post('/', validateLogin, async (req, res, next) => {
+router.post('/', async (req, res, next) => {
     const { credential, password } = req.body;
 
     const user = await User.unscoped().findOne({

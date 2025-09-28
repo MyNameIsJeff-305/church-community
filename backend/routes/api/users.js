@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { requireAuth } = require('../../utils/auth.js');
-const { User, Spot, Review, SpotImage, ReviewImage, Booking } = require('../../db/models');
-const { validateSignup, validateUser } = require('../../utils/validations')
+const { User } = require('../../db/models');
+// const { validateSignup} = require('../../utils/validations')
 const { Sequelize, where } = require('sequelize');
 
 const bcrypt = require('bcryptjs');
@@ -19,7 +19,7 @@ router.get('/me', requireAuth, async (req, res, next) => {
 });
 
 //Signup a User
-router.post('/', validateSignup, async (req, res, next) => {
+router.post('/', async (req, res, next) => {
     // try block
     try {
         const userEmail = await User.findAll({

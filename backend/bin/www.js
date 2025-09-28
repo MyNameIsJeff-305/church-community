@@ -1,6 +1,9 @@
-require('dotenv').config();
+#!/usr/bin/env node
+const dotenv = require('dotenv');
+dotenv.config();
 
-const { port } = require('../config');
+const config = require('../config');
+const { port } = config;
 
 const app = require('../app');
 const db = require('../db/models');

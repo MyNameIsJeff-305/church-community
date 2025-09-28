@@ -1,6 +1,5 @@
 const { validationResult } = require('express-validator');
 const { check } = require('express-validator');
-const { Spot } = require('../db/models');
 
 const handleValidationErrors = (req, _res, next) => {
     const validationErrors = validationResult(req);
@@ -43,30 +42,30 @@ const properUserValidation = async (req, res, next) => {
     }
 };
 
-const validateLogin = [
+// const validateLogin = [
 
-    check('credential')
-        .exists({ checkFalsy: true })
-        .notEmpty()
-        .withMessage("Email or username is required"),
-    check('password')
-        .exists({ checkFalsy: true })
-        .withMessage("Password is required"),
-    handleValidationErrors
-];
+//     check('credential')
+//         .exists({ checkFalsy: true })
+//         .notEmpty()
+//         .withMessage("Email or username is required"),
+//     check('password')
+//         .exists({ checkFalsy: true })
+//         .withMessage("Password is required"),
+//     handleValidationErrors
+// ];
 
-const validateSignup = [
-    check('email')
-        .exists({ checkFalsy: true })
-        .isEmail()
-        .withMessage('Invalid email'),
-    check('username')
-        .exists({ checkFalsy: true })
-        .withMessage("Username is required"),
-    check('firstName').exists({ checkFalsy: true }).withMessage("First Name is required"),
-    check('lastName').exists({ checkFalsy: true }).withMessage("Last Name is required"),
-    handleValidationErrors
-];
+// const validateSignup = [
+//     check('email')
+//         .exists({ checkFalsy: true })
+//         .isEmail()
+//         .withMessage('Invalid email'),
+//     check('username')
+//         .exists({ checkFalsy: true })
+//         .withMessage("Username is required"),
+//     check('firstName').exists({ checkFalsy: true }).withMessage("First Name is required"),
+//     check('lastName').exists({ checkFalsy: true }).withMessage("Last Name is required"),
+//     handleValidationErrors
+// ];
 
 const validateQueryValues = [
     check('page').optional().isInt({ min: 1 }).withMessage('Page must be greater than or equal to 1'),
@@ -84,11 +83,9 @@ const validateQueryValues = [
 
 module.exports = {
     handleValidationErrors,
-    validateSpotValues,
-    validateReviews,
     properUserValidation,
-    properReviewValidation,
-    validateLogin,
-    validateSignup,
+    // properReviewValidation,
+    // validateLogin,
+    // validateSignup,
     validateQueryValues,
 }
